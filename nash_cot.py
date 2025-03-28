@@ -315,7 +315,7 @@ def parse_arguments():
     parser.add_argument(
         "--dataset", type=str, default="aqua",
         choices=["aqua", "gsm8k", "commonsensqa", "addsub", "multiarith", "strategyqa", "svamp", "singleeq",
-                 "bigbench_date", "object_tracking", "coin_flip", "last_letters"], help="dataset used for experiment"
+                 "bigbench_date", "object_tracking", "coin_flip", "last_letters", "math-500", "aime2024", "amc2023", "gaokao-mathqa"], help="dataset used for experiment"
     )
     parser.add_argument(
         "--capacity_one_epoch",type=int, default=60)
@@ -458,6 +458,19 @@ def parse_arguments():
     elif args.dataset == "last_letters":
         args.dataset_path = "dataset/last_letters/last_letters.json"
         args.direct_answer_trigger = "\nTherefore, the answer is"
+        
+    elif args.dataset == "math-500":
+        args.dataset_path = "dataset/MATH-500/test.jsonl"
+        args.direct_answer_trigger = "\nTherefore, the answer (arabic numerals) is"
+    elif args.dataset == "aime2024":
+        args.dataset_path = "dataset/AIME2024/aime_2024_problems.parquet"
+        args.direct_answer_trigger = "\nTherefore, the answer (arabic numerals) is"
+    elif args.dataset == "amc2023":
+        args.dataset_path = "dataset/AMC2023/test.parquet"
+        args.direct_answer_trigger = "\nTherefore, the answer (arabic numerals) is"
+    elif args.dataset == "gaokao-mathqa":
+        args.dataset_path = "dataset/gaokao-mathqa/test.parquet"
+        args.direct_answer_trigger = "\nTherefore, among A through D, the answer is"
     else:
         raise ValueError("dataset is not properly defined ...")
         

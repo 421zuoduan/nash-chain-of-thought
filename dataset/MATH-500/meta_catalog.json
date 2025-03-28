@@ -1,0 +1,1 @@
+{"dataset_name": "MATH", "task_type": "Mathematical Reasoning", "dataset_path": "datasets/data/MATH-500", "split_path": {"train": "datasets/data/MATH-500/MATH/train", "test": "datasets/data/MATH-500/MATH/test", "validation": "datasets/data/MATH-500/MATH/test"}}

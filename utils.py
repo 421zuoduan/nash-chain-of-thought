@@ -15,6 +15,8 @@ import random
 import time
 import datetime
 
+import pandas as pd
+
 
 def shuffleDict(d):
     keys = list(d.keys())
@@ -229,6 +231,57 @@ def data_reader(args):
                 a = line["answer"]
                 questions.append(q)
                 answers.append(a)
+                
+    # elif args.dataset == "math-500":
+    #     with open(args.dataset_path) as f:
+    #         json_data = json.load(f)
+    #         for line in json_data:
+    #             q = line["problem"].strip()
+    #             a = str(line["Answer"])
+    #             questions.append(q)
+    #             answers.append(a)
+    
+    elif args.dataset == "math-500":
+        with open(args.dataset_path, 'r') as f:
+            for line in f:
+                data = json.loads(line.strip())
+                q = data["problem"].strip()
+                a = str(data["answer"])
+                questions.append(q)
+                answers.append(a)
+                
+    elif args.dataset == "aime2024":
+        df = pd.read_parquet(args.dataset_path, engine='pyarrow')
+        for index, row in df.iterrows():
+            q = row['Problem'].strip()
+            a = str(row['Answer'])
+            questions.append(q)
+            answers.append(a)
+                
+    elif args.dataset == "amc2023":
+        df = pd.read_parquet(args.dataset_path, engine='pyarrow')
+        for index, row in df.iterrows():
+            q = row['question'].strip()
+            a = str(row['answer'])
+            questions.append(q)
+            answers.append(a)
+                
+    elif args.dataset == "gaokao-mathqa":
+        df = pd.read_parquet(args.dataset_path, engine='pyarrow')
+        for index, row in df.iterrows():
+            q = row['query'][:-14].strip()
+            a = str(row['gold'])
+            if a[0] == 0:
+                aa = 'A'
+            elif a[0] == 1:
+                aa = 'B'
+            elif a[0] == 2:
+                aa = 'C'
+            else:
+                aa = 'D'
+
+            questions.append(q)
+            answers.append(aa)
 
     else:
         raise ValueError("dataset is not properly defined ...")
@@ -302,7 +355,7 @@ def answer_cleansing(args, pred, must_choice=False):
         answer_flag = True if len(preds) > 1 else False
         pred = preds[-1]
 
-    if args.dataset in ("aqua", "commonsensqa"):
+    if args.dataset in ("aqua", "commonsensqa", "gaokao-mathqa"):
         pred = re.findall(r'A|B|C|D|E', pred)
     elif args.dataset == "bigbench_date":
         pred = re.findall(r'A|B|C|D|E|F', pred)
@@ -322,6 +375,26 @@ def answer_cleansing(args, pred, must_choice=False):
     elif args.dataset == "last_letters":
         pred = re.sub("\"|\'|\n|\.|\s", "", pred)
         pred = [pred]
+        
+    elif args.dataset == "math-500":
+        # pred = re.sub("\"|\'|\n|\.|\s", "", pred)
+        # pred = re.sub("\"|\'|\n", "", pred)
+        pred = [pred]
+        
+    elif args.dataset == "aime2024":
+        # pred = re.sub("\"|\'|\n|\.|\s", "", pred)
+        pred = [pred]
+        
+    elif args.dataset == "amc2023":
+        # pred = re.sub("\"|\'|\n|\.|\s", "", pred)
+        pred = [pred] 
+        
+    elif args.dataset == "gaokao-mathqa":
+        # pred = re.sub("\"|\'|\n|\.|\s", "", pred)
+        pred = pred[:3]
+        pred = pred = re.findall(r'A|B|C|D', pred)
+        # pred = [pred]
+        
     else:
         raise ValueError("dataset is not properly defined ...")
 

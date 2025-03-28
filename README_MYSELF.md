@@ -1,5 +1,35 @@
 # 代码配置
 
+用 auto-cot 的环境应该也能跑, 不能的话再尝试下面配环境. 这个冲突太多了, 我注释了 `requirements.txt` 里的一些包
+
+```
+conda create --name nash_cot python=3.8
+conda activate nash_cot
+pip install -r requirements.txt
+pip install pandas
+pip install pyarrow
+```
+
+运行脚本 `run_nash_cot.sh`, 如果只跑单个数据集需要注释掉一些. 数据集我一起传上来了
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 代码配置 (废)
+
+**以下不用看**
+
+## 配环境
+
 
 ```
 conda create --name nash_cot python=3.8
@@ -36,7 +66,7 @@ The conflict is caused by:
 pip install pyopengl==3.1.4
 ```
 
-还有包冲突
+还有包冲突 (后续有冲突都注释掉txt对应包)
 
 ```
 The conflict is caused by:
@@ -95,3 +125,17 @@ The conflict is caused by:
 ```
 pip install ml-logger==0.10.21
 ```
+
+安装 pandas
+
+```
+pip install pandas
+pip install pyarrow
+```
+
+
+## 添加数据集
+
+`utils.py` 添加数据集
+
+`nash_cot.py` 添加数据集
