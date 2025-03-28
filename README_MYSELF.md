@@ -1,6 +1,6 @@
 # 代码配置
 
-用 auto-cot 的环境应该也能跑, 不能的话再尝试下面配环境. 这个冲突太多了, 我注释了 `requirements.txt` 里的一些包
+用 auto-cot 的环境应该也能跑, 不能的话再尝试下面配环境. 这个冲突太多了, 我注释了 `requirements.txt` 里的一些包. 如果还有冲突, 就手动下载关键包 torch transformers pandas pyarrow 这些, 不管包冲突
 
 ```
 conda create --name nash_cot python=3.8
