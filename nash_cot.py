@@ -214,6 +214,8 @@ def main():
         x, y = data
         x = "Q: " + x[0] + "\n" + "A:"
         y = y[0].strip()
+        if args.dataset == "amc2023":
+            y = y[:-2]
         max_length = args.max_length_cot if "cot" in args.method else args.max_length_direct
         all=[]
         decoder.confine_player(x, max_length)
@@ -229,6 +231,8 @@ def main():
                 x, y = data
                 x = "Q: " + x[0] + "\n" + "A:"
                 y = y[0].strip()
+                if args.dataset == "amc2023":
+                    y = y[:-2]
                 if args.method == "zero_shot":
                     x = x + " " + args.direct_answer_trigger_for_zeroshot
                 elif args.method == "zero_shot_cot":
