@@ -10,7 +10,7 @@ from pathlib import Path
 from collections import Counter
 
 from utils import *
-from local_decoder import custom_api，custom_api_others
+from local_decoder import custom_api, custom_api_others, custom_api_gpt
 
 def file_to_string(filename):
     # this function is utilized to readout a file for the construction of template.
@@ -36,7 +36,8 @@ class Nash_decoder(object):
                      , tolerance=1
                      , initial_system=None
                      , direct_answer_trigger=None
-                     , LLM=None):
+                     , LLM=None
+                     , call_api=False):
         """
         Multi-Agents Nash Equilibrium System
         """
@@ -178,9 +179,11 @@ def main():
         cot_template = args.CoT_template
         
     # initialize local decoder
-    if sub_dir=='Mistral_7B':
+    if args.sub_dir=='Mistral_7B':
         decoder = custom_api(tokenizer_path=args.tokenizer_path, 
                              pretrained_model=args.model_tag)
+    elif args.sub_dir=='experiments':
+        decoder = custom_api_gpt()
     else:
         decoder = custom_api_others(tokenizer_path=args.tokenizer_path, 
                                     pretrained_model=args.model_tag)
@@ -190,7 +193,7 @@ def main():
                            selected_players=args.selected_players, tolerance=args.tolerance,
                            initial_system=args.initial_system,
                            direct_answer_trigger=args.direct_answer_trigger_for_zeroshot_cot,
-                           LLM=decoder)
+                           LLM=decoder, call_api=True)
     
     print("setup data loader ...")
     dataloader = setup_data_loader(args)
@@ -307,7 +310,8 @@ def parse_arguments():
                         default='/zhangziqi/self_llm/hf_hub/models--mistralai--Mistral-7B-Instruct-v0.2')
     parser.add_argument("--random_seed", type=int, default=1, help="random seed")
     parser.add_argument("--proj_name", type=str, default="nash_cot")
-    parser.add_argument("--sub_dir",type=str,default="Mistral_7B")
+    # parser.add_argument("--sub_dir",type=str,default="Mistral_7B")
+    parser.add_argument("--sub_dir", type=str, default='API')
     parser.add_argument(
         "--dataset", type=str, default="aqua",
         choices=["aqua", "gsm8k", "commonsensqa", "addsub", "multiarith", "strategyqa", "svamp", "singleeq",
@@ -322,7 +326,7 @@ def parse_arguments():
     parser.add_argument("--max_num_worker", type=int, default=3, help="maximum number of workers for dataloader")
 
     parser.add_argument(
-        "--model", type=str, default="gpt3", choices=["gpt3", "gpt3-medium", "gpt3-large", "gpt3-xl"],
+        "--model", type=str, default="gpt3", choices=["gpt3", "gpt3-medium", "gpt3-large", "gpt3-xl", "gpt-3.5-turbo-0125"],
         help="model used for decoding. Note that 'gpt3' are the smallest models.")
         
     parser.add_argument(
